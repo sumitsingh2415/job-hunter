@@ -12,15 +12,15 @@ const KEYWORDS = [
   "International Business Development"
 ];
 
-const LOCATIONS = ["Mumbai", "Bangalore", "Pune", "India", "Remote"];
+const LOCATIONS = ["Bengaluru", "Mumbai", "Pune", "Remote"];
 
 export async function scrapeLinkedIn() {
-  console.log('[Scraper] Starting LinkedIn Public Jobs Scraper (Mumbai, Bangalore, Pune)...');
+  console.log('[Scraper] Starting LinkedIn Public Jobs Scraper (Bengaluru, Mumbai, Pune, Remote)...');
   const jobs = [];
   const seenUrls = new Set();
 
-  for (const keyword of KEYWORDS.slice(0, 3)) {
-    for (const location of LOCATIONS.slice(0, 3)) {
+  for (const keyword of KEYWORDS.slice(0, 4)) {
+    for (const location of LOCATIONS) {
       try {
         const targetUrl = `https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}&start=0`;
         

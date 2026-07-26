@@ -1,4 +1,4 @@
-// SQLite Database Management Module with Applied Timestamp Tracking
+// SQLite Database Management Module with Smart Location Synonym Matching
 
 import Database from 'better-sqlite3';
 import path from 'path';
@@ -63,7 +63,6 @@ export function initDB() {
     );
   `);
 
-  // Ensure applied_at and saved_at columns exist if table was previously created
   try { db.exec(`ALTER TABLE jobs ADD COLUMN applied_at TEXT;`); } catch (e) {}
   try { db.exec(`ALTER TABLE jobs ADD COLUMN saved_at TEXT;`); } catch (e) {}
 }
@@ -115,8 +114,15 @@ export function getJobs(options = {}) {
   }
 
   if (options.location) {
-    query += ` AND location LIKE ?`;
-    params.push(`%${options.location}%`);
+    const locLower = options.location.toLowerCase();
+    if (locLower.includes('bangalore') || locLower.includes('bengaluru')) {
+      query += ` AND (LOWER(location) LIKE '%bangalore%' OR LOWER(location) LIKE '%bengaluru%')`;
+    } else if (locLower.includes('mumbai')) {
+      query += ` AND (LOWER(location) LIKE '%mumbai%' OR LOWER(location) LIKE '%thane%' OR LOWER(location) LIKE '%navi mumbai%')`;
+    } else {
+      query += ` AND LOWER(location) LIKE ?`;
+      params.push(`%${locLower}%`);
+    }
   }
 
   query += ` ORDER BY match_score DESC, scraped_at DESC`;
