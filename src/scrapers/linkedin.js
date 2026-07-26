@@ -12,15 +12,15 @@ const KEYWORDS = [
   "International Business Development"
 ];
 
-const LOCATIONS = ["Mumbai", "India", "Remote"];
+const LOCATIONS = ["Mumbai", "Bangalore", "Pune", "India", "Remote"];
 
 export async function scrapeLinkedIn() {
-  console.log('[Scraper] Starting LinkedIn Public Jobs Scraper...');
+  console.log('[Scraper] Starting LinkedIn Public Jobs Scraper (Mumbai, Bangalore, Pune)...');
   const jobs = [];
   const seenUrls = new Set();
 
   for (const keyword of KEYWORDS.slice(0, 3)) {
-    for (const location of LOCATIONS.slice(0, 2)) {
+    for (const location of LOCATIONS.slice(0, 3)) {
       try {
         const targetUrl = `https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}&start=0`;
         
@@ -78,7 +78,7 @@ export async function scrapeLinkedIn() {
         });
 
         // Courteous rate-limiting delay between requests
-        await new Promise(r => setTimeout(r, 1200));
+        await new Promise(r => setTimeout(r, 1000));
 
       } catch (error) {
         console.warn(`[Scraper Warning] LinkedIn search for "${keyword}" in "${location}" encountered rate limit or timeout.`);

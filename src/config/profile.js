@@ -70,6 +70,8 @@ export const ANSHU_PROFILE = {
     "Navi Mumbai",
     "Thane",
     "Pune",
+    "Bangalore",
+    "Bengaluru",
     "Remote",
     "India"
   ],
