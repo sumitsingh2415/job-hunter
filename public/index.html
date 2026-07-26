@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anshu Priya | AI Job Hunter & Match Dashboard</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+
+  <!-- Background Animated Gradient Orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-avatar">AP</div>
+        <div>
+          <h1 class="brand-title">Anshu Priya <span class="badge-pro">JOB HUNTER PRO</span></h1>
+          <p class="brand-subtitle">Business Development & Marketing Match Engine</p>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <div class="system-status" id="schedulerStatus">
+          <span class="pulse-dot"></span>
+          <span class="status-text">Cron Active (9 AM & 6 PM)</span>
+        </div>
+
+        <button class="btn btn-primary" id="btnScrapeNow">
+          <i class="fa-solid fa-bolt"></i> Trigger Scraper Now
+        </button>
+
+        <button class="btn btn-secondary" id="btnProfile">
+          <i class="fa-solid fa-sliders"></i> Target Profile
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-layout">
+
+    <!-- Hero Stats Bar -->
+    <section class="stats-grid">
+      <div class="stat-card glass-card">
+        <div class="stat-icon icon-blue"><i class="fa-solid fa-briefcase"></i></div>
+        <div class="stat-info">
+          <span class="stat-value" id="statTotal">0</span>
+          <span class="stat-label">Total Jobs Scraped</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-card">
+        <div class="stat-icon icon-emerald"><i class="fa-solid fa-bullseye"></i></div>
+        <div class="stat-info">
+          <span class="stat-value" id="statHighMatch">0</span>
+          <span class="stat-label">High Matches (&ge;70%)</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-card">
+        <div class="stat-icon icon-amber"><i class="fa-solid fa-star"></i></div>
+        <div class="stat-info">
+          <span class="stat-value" id="statSaved">0</span>
+          <span class="stat-label">Saved Jobs</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-card">
+        <div class="stat-icon icon-purple"><i class="fa-solid fa-paper-plane"></i></div>
+        <div class="stat-info">
+          <span class="stat-value" id="statApplied">0</span>
+          <span class="stat-label">Applications Sent</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-card">
+        <div class="stat-icon icon-rose"><i class="fa-solid fa-circle-xmark"></i></div>
+        <div class="stat-info">
+          <span class="stat-value" id="statRejected">0</span>
+          <span class="stat-label">Rejected Jobs</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search & Filter Controls -->
+    <section class="filter-section glass-card">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search roles, companies, or skills (e.g. Power BI, MOU, B2B Sales)...">
+      </div>
+
+      <div class="filter-controls">
+        <div class="filter-group">
+          <label><i class="fa-solid fa-chart-line"></i> Match Score:</label>
+          <select id="scoreFilter">
+            <option value="0">All Jobs</option>
+            <option value="70" selected>High Match (&ge; 70%)</option>
+            <option value="50">Moderate Match (&ge; 50%)</option>
+            <option value="30">Basic Match (&ge; 30%)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label><i class="fa-solid fa-location-dot"></i> Location:</label>
+          <select id="locationFilter">
+            <option value="">All Locations</option>
+            <option value="mumbai">Mumbai / MMR</option>
+            <option value="remote">Remote / WFH</option>
+            <option value="pune">Pune</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label><i class="fa-solid fa-list-check"></i> Application Pipeline:</label>
+          <select id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="new">New Matches</option>
+            <option value="saved">⭐ Saved Roles</option>
+            <option value="applied">✉️ Applied Roles</option>
+            <option value="interviewing">🎯 Interviewing</option>
+            <option value="archived">❌ Rejected Roles</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scraper Progress Banner (hidden by default) -->
+    <div id="scrapeBanner" class="scrape-banner glass-card hidden">
+      <div class="spinner"></div>
+      <div>
+        <h4 id="bannerTitle">Scraping Live Jobs across LinkedIn, RemoteOK & India Portals...</h4>
+        <p id="bannerSub">Matching listings against Anshu's resume profile in real time.</p>
+      </div>
+    </div>
+
+    <!-- Jobs Stream Grid -->
+    <section class="jobs-container">
+      <div class="section-header">
+        <h2 class="section-title">Matched Job Postings <span id="jobCountBadge" class="count-pill">0</span></h2>
+        <div class="sort-controls">
+          <span class="last-sync" id="lastSyncTime">Last updated: Just now</span>
+        </div>
+      </div>
+
+      <div id="jobsGrid" class="jobs-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Job Detail Modal -->
+  <div id="jobModal" class="modal-overlay hidden">
+    <div class="modal-content glass-card">
+      <button class="modal-close" id="closeModal">&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Profile & Keyword Editor Modal -->
+  <div id="profileModal" class="modal-overlay hidden">
+    <div class="modal-content glass-card">
+      <button class="modal-close" id="closeProfileModal">&times;</button>
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-user-gear"></i> Target Candidate Profile & Rules</h2>
+        <p>Configured specifically for Anshu Priya (Business Development & Marketing)</p>
+      </div>
+      <div id="profileModalBody"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
