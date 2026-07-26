@@ -1,15 +1,18 @@
-// Master Job Aggregator & Notification Trigger
+// Master Job Aggregator & Multi-Platform Trigger
 
 import { scrapeLinkedIn } from './linkedin.js';
 import { scrapeRemoteOK } from './remoteok.js';
 import { scrapeIndiaJobs } from './naukri.js';
+import { scrapeWeWorkRemotely } from './weworkremotely.js';
+import { scrapeIndeedJooble } from './indeed.js';
+import { scrapeWellfound } from './wellfound.js';
 import { saveJob, logScrapeEvent } from '../db/database.js';
 import { dispatchHighMatchAlert } from '../notifier/emailNotifier.js';
 import { sendTelegramAlert } from '../notifier/telegramNotifier.js';
 
 export async function runAllScrapers() {
   console.log('====================================================');
-  console.log(`[Job Hunter Engine] Scrape Job Started at ${new Date().toLocaleString()}`);
+  console.log(`[Job Hunter Engine] Multi-Platform Scrape Job Started at ${new Date().toLocaleString()}`);
   console.log('====================================================');
 
   let totalJobsFound = 0;
@@ -17,8 +20,11 @@ export async function runAllScrapers() {
 
   const results = await Promise.allSettled([
     scrapeLinkedIn(),
+    scrapeIndeedJooble(),
     scrapeRemoteOK(),
-    scrapeIndiaJobs()
+    scrapeWeWorkRemotely(),
+    scrapeIndiaJobs(),
+    scrapeWellfound()
   ]);
 
   for (const res of results) {
