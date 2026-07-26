@@ -93,6 +93,22 @@ export const ANSHU_PROFILE = {
     "Chief Technology Officer"
   ],
 
+  // Disqualifying Education & Degree Terms
+  disqualifyingDegrees: [
+    "computer science",
+    "degree in computer science",
+    "bachelor's in computer science",
+    "bachelor degree in computer science",
+    "bs in computer science",
+    "b.tech in computer science",
+    "b.e in computer science",
+    "b.tech in cs",
+    "b.e. in cs",
+    "btech in cs",
+    "information technology degree",
+    "b.tech in it"
+  ],
+
   scoringWeights: {
     titleMatch: 40,
     skillsMatch: 35,

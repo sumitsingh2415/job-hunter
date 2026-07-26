@@ -8,7 +8,7 @@ export function calculateJobMatch(job, profile = ANSHU_PROFILE) {
   const lowerTitle = title.toLowerCase();
   const lowerLoc = location.toLowerCase();
 
-  // Step 1: Check for Negative Keywords (Immediate Disqualification)
+  // Step 1: Check for Negative Title Keywords (Immediate Disqualification)
   for (const neg of profile.negativeKeywords) {
     if (lowerTitle.includes(neg.toLowerCase())) {
       return {
@@ -18,6 +18,31 @@ export function calculateJobMatch(job, profile = ANSHU_PROFILE) {
         missingSkills: profile.primarySkills.slice(0, 5),
         isLocationMatch: false,
         fitSummary: `Disqualified due to negative keyword "${neg}" in title.`,
+        disqualified: true
+      };
+    }
+  }
+
+  // Step 1b: Check for Disqualifying Degrees (Computer Science, B.Tech CS, IT Engineering Requirements)
+  const csDegreeTerms = profile.disqualifyingDegrees || [
+    "computer science",
+    "degree in computer science",
+    "bachelor's in computer science",
+    "bs in computer science",
+    "b.tech in computer science",
+    "b.e in computer science",
+    "b.tech in cs"
+  ];
+
+  for (const csTerm of csDegreeTerms) {
+    if (fullContent.includes(csTerm.toLowerCase())) {
+      return {
+        matchScore: 0,
+        matchGrade: "Degree Mismatch",
+        matchingSkills: [],
+        missingSkills: profile.primarySkills.slice(0, 5),
+        isLocationMatch: false,
+        fitSummary: `Disqualified: Requires Computer Science / Engineering degree (${csTerm}).`,
         disqualified: true
       };
     }
